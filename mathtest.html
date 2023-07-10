@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Times Tables Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+background-color: beige;
+        }
+        
+        h1 {
+            margin-bottom: 20px;
+        }
+        
+        .question {
+            display: inline-block;
+            width: 120px;
+            height: 120px;
+            border: 1px solid #ccc;
+            margin: 10px;
+            padding-top: 40px;
+            font-size: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .question input {
+            width: 50px;
+            text-align: center;
+        }
+        
+        #submit-btn, #reset-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        
+        .correct {
+            background-color: #c3e6cb;
+            transition: background-color 0.5s ease;
+        }
+        
+        .incorrect {
+            background-color: #f5c6cb;
+            transition: background-color 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+    <h1>Times Tables Test</h1>
+    
+    <div id="questions"></div>
+    
+    <button id="submit-btn">Submit</button>
+    <button id="reset-btn">Reset</button>
+    
+    <div id="result"></div>
+
+    <script>
+        function generateQuestions() {
+            var questionsDiv = document.getElementById("questions");
+            questionsDiv.innerHTML = "";
+            
+            for (var i = 0; i < 26; i++) {
+                var x = Math.floor(Math.random() * 13);
+                var y = Math.floor(Math.random() * 13);
+                var question = document.createElement("div");
+                question.className = "question";
+                question.innerHTML = x + " x " + y + " = <input type='text' data-answer='" + (x * y) + "'>";
+                questionsDiv.appendChild(question);
+            }
+        }
+        
+        function submitAnswers() {
+            var questions = document.getElementsByClassName("question");
+            var correctCount = 0;
+            
+            for (var i = 0; i < questions.length; i++) {
+                var input = questions[i].querySelector("input");
+                var userAnswer = parseInt(input.value);
+                var correctAnswer = parseInt(input.getAttribute("data-answer"));
+                
+                if (userAnswer === correctAnswer) {
+                    questions[i].classList.add("correct");
+                    questions[i].classList.remove("incorrect");
+                    correctCount++;
+                } else {
+                    questions[i].classList.add("incorrect");
+                    questions[i].classList.remove("correct");
+                }
+            }
+            
+            var resultDiv = document.getElementById("result");
+            resultDiv.innerHTML = "Grade: " + (correctCount / questions.length * 100).toFixed(2) + "%";
+        }
+        
+        function resetTest() {
+            var questions = document.getElementsByClassName("question");
+            
+            for (var i = 0; i < questions.length; i++) {
+                questions[i].classList.remove("correct");
+                questions[i].classList.remove("incorrect");
+                questions[i].querySelector("input").value = "";
+            }
+            
+            var resultDiv = document.getElementById("result");
+            resultDiv.innerHTML = "";
+            
+            generateQuestions();
+        }
+        
+        document.getElementById("submit-btn").addEventListener("click", submitAnswers);
+        document.getElementById("reset-btn").addEventListener("click", resetTest);
+        
+        generateQuestions();
+    </script>
+</body>
+</html>
